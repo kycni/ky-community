@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/community/community.iml" filepath="$PROJECT_DIR$/community/community.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/ky-community.iml" filepath="$PROJECT_DIR$/.idea/ky-community.iml" />
     </modules>
   </component>
