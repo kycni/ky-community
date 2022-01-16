@@ -1,0 +1,10 @@
+justauth:
+  enabled: true
+  type: 
+    GITHUB:
+      client_id: 589d815f2be959f41c6c
+      client_secret: efdabbe1127f00320b7644a7eb52a3caf19a0056
+      redirect_uri: http://localhost:7888/callback/github
+
+server:
+  port: 7888
