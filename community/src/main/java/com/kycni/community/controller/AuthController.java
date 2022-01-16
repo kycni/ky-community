@@ -1,6 +1,8 @@
 package com.kycni.community.controller;
 
 import com.kycni.community.dto.GithubUser;
+import com.kycni.community.mapper.UserMapper;
+import com.kycni.community.model.User;
 import com.xkcoding.http.config.HttpConfig;
 import me.zhyd.oauth.config.AuthConfig;
 import me.zhyd.oauth.model.AuthCallback;
@@ -9,6 +11,7 @@ import me.zhyd.oauth.model.AuthUser;
 import me.zhyd.oauth.request.AuthGithubRequest;
 import me.zhyd.oauth.request.AuthRequest;
 import me.zhyd.oauth.utils.AuthStateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -17,10 +20,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.util.UUID;
 
 
 @Controller
 public class AuthController {
+    
+    @Autowired
+    private UserMapper userMapper;
+    
     /**
      * @param response 携带code获取跳转地址
      * @throws IOException Io异常
@@ -39,13 +47,12 @@ public class AuthController {
      */
     @RequestMapping("/callback/github")
     public Object loginCallback(AuthCallback callback,
-                                GithubUser githubUser,
+                                User user,
                                 HttpServletRequest request) {
         AuthRequest authRequest = getAuthRequest();
         // 根据返回的参数，执行登录请求（获取用户信息）
         AuthResponse<AuthUser> authResponse = authRequest.login(callback);
-        githubUser.setName(authResponse.getData().getUsername());
-        githubUser.setRemark(authResponse.getData().getRemark());
+        
         // 打印授权返回代码（2000表示成功，可以用来判断用户登录成功与否）
         //打印用户的昵称、ID、头像等基本信息
         System.out.println("用户的UnionID：" + authResponse.getData().getUuid());
@@ -55,9 +62,16 @@ public class AuthController {
         //打印用户的Token中的信息
         System.out.println("access_token：" + authResponse.getData().getToken().getAccessToken());
         
-        if (githubUser.getName() != null) {
+        if (authResponse.getData().getNickname() != null) {
+            user.setToken(UUID.randomUUID().toString());
+            user.setName(authResponse.getData().getNickname());
+            user.setAccountId(authResponse.getData().getUuid());
+            user.setGmtCreate(System.currentTimeMillis());
+            user.setGmtModified(user.getGmtCreate());
+            userMapper.insert(user);
             // 登录成功，写cookie 和session
-            request.getSession().setAttribute("githubUser", githubUser);
+            request.getSession().setAttribute("githubUser", user);
+            return "redirect:/";
         }
         System.out.println("登录失败");
         return "redirect:/";
