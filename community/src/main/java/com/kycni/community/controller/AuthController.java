@@ -12,6 +12,7 @@ import me.zhyd.oauth.utils.AuthStateUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -37,11 +38,12 @@ public class AuthController {
      * @return 返回首页
      */
     @RequestMapping("/callback/github")
-    public Object loginCallback(AuthCallback callback) {
+    public Object loginCallback(AuthCallback callback,
+                                GithubUser githubUser,
+                                HttpServletRequest request) {
         AuthRequest authRequest = getAuthRequest();
         // 根据返回的参数，执行登录请求（获取用户信息）
         AuthResponse<AuthUser> authResponse = authRequest.login(callback);
-        GithubUser githubUser = new GithubUser();
         githubUser.setName(authResponse.getData().getUsername());
         githubUser.setRemark(authResponse.getData().getRemark());
         // 打印授权返回代码（2000表示成功，可以用来判断用户登录成功与否）
@@ -50,11 +52,15 @@ public class AuthController {
         System.out.println("用户的用户名："+authResponse.getData().getUsername());
         System.out.println("用户的昵称：" + authResponse.getData().getNickname());
         System.out.println("用户的头像：" + authResponse.getData().getAvatar());
-
         //打印用户的Token中的信息
         System.out.println("access_token：" + authResponse.getData().getToken().getAccessToken());
-
-        return "index";
+        
+        if (githubUser.getName() != null) {
+            // 登录成功，写cookie 和session
+            request.getSession().setAttribute("githubUser", githubUser);
+        }
+        System.out.println("登录失败");
+        return "redirect:/";
     }
 
     /**
