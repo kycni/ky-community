@@ -1,6 +1,5 @@
 package com.kycni.community.controller;
 
-import com.kycni.community.dto.GithubUser;
 import com.kycni.community.mapper.UserMapper;
 import com.kycni.community.model.User;
 import com.xkcoding.http.config.HttpConfig;
@@ -15,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class AuthController {
     private UserMapper userMapper;
     
     /**
-     * @param response 携带code获取跳转地址
+     * @param response 授权获取登录地址
      * @throws IOException Io异常
      */
     @RequestMapping("/login/github")
@@ -42,12 +42,13 @@ public class AuthController {
     }
 
     /**
-     * @param callback 携带code并验证code ok登录
+     * @param callback 验证code 执行登录请求，获取用户信息
      * @return 返回首页
      */
     @RequestMapping("/callback/github")
     public Object loginCallback(AuthCallback callback,
                                 User user,
+                                HttpServletResponse response,
                                 HttpServletRequest request) {
         AuthRequest authRequest = getAuthRequest();
         // 根据返回的参数，执行登录请求（获取用户信息）
@@ -62,15 +63,22 @@ public class AuthController {
         //打印用户的Token中的信息
         System.out.println("access_token：" + authResponse.getData().getToken().getAccessToken());
         
+        /*
+        保存用户信息与登录状态
+        */
         if (authResponse.getData().getNickname() != null) {
-            user.setToken(UUID.randomUUID().toString());
+            String token = UUID.randomUUID().toString(); 
+            user.setToken(token);
             user.setName(authResponse.getData().getNickname());
             user.setAccountId(authResponse.getData().getUuid());
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
             userMapper.insert(user);
+            
             // 登录成功，写cookie 和session
-            request.getSession().setAttribute("githubUser", user);
+            request.getSession().setAttribute("user", user);
+            response.addCookie(new Cookie("token", token));
+            
             return "redirect:/";
         }
         System.out.println("登录失败");
