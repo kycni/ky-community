@@ -47,7 +47,6 @@ public class AuthController {
      */
     @RequestMapping("/callback/github")
     public Object loginCallback(AuthCallback callback,
-                                User user,
                                 HttpServletResponse response,
                                 HttpServletRequest request) {
         AuthRequest authRequest = getAuthRequest();
@@ -67,18 +66,20 @@ public class AuthController {
         保存用户信息与登录状态
         */
         if (authResponse.getData().getNickname() != null) {
-            String token = UUID.randomUUID().toString(); 
+            User user = new User();
+            String token = UUID.randomUUID().toString();
             user.setToken(token);
             user.setName(authResponse.getData().getNickname());
+            user.setBio(authResponse.getData().getRemark());
             user.setAccountId(authResponse.getData().getUuid());
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
-            userMapper.insert(user);
             
-            // 登录成功，写cookie 和session
+            //将token的值存入数据库
+            userMapper.insert(user);
+            // 登录成功，将token的值存入到cookie中,写cookie 和session
             request.getSession().setAttribute("user", user);
             response.addCookie(new Cookie("token", token));
-            
             return "redirect:/";
         }
         System.out.println("登录失败");
