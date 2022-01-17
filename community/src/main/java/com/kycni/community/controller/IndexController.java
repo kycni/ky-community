@@ -23,12 +23,14 @@ public class IndexController {
         /*
           获得cookies, 根据token值查找用户
          */
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if ("token".equals(cookie.getName())) {
-                String token = cookie.getValue();
-                User user = userMapper.findByToken(token);
-                break;
+        if (request.getSession() != null) {
+            Cookie[] cookies = request.getCookies();
+            for (Cookie cookie : cookies) {
+                if ("token".equals(cookie.getName())) {
+                    String token = cookie.getValue();
+                    User user = userMapper.findByToken(token);
+                    break;
+                }
             }
         }
         return "index";
