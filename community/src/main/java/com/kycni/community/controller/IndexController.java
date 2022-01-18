@@ -1,25 +1,35 @@
 package com.kycni.community.controller;
 
+import com.kycni.community.dto.QuestionDTO;
 import com.kycni.community.mapper.UserMapper;
 import com.kycni.community.model.User;
+import com.kycni.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author Kycni
  * @date 2022/1/15 17:48
  */
+
 @Controller
 public class IndexController {
+    
     @Autowired
     private UserMapper userMapper;
     
+    @Autowired
+    private QuestionService questionService;
+    
     @GetMapping("/")
-    public String index (HttpServletRequest request) {
+    public String index (HttpServletRequest request,
+                         Model model) {
         /*
           获得cookies, 根据token值查找用户
          */
@@ -37,6 +47,8 @@ public class IndexController {
             }
         }
         
+        List<QuestionDTO> questionList = questionService.list();
+        model.addAttribute("questions", questionList);
         return "index";
     }
 }

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
+    
     private Integer id;
     private String name;
     private String accountId;
@@ -19,4 +20,7 @@ public class User {
     private String token;
     private Long gmtCreate;
     private Long gmtModified;
+    private String avatarUrl;
+    private String source;
+    
 }

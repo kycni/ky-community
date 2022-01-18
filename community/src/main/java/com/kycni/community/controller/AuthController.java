@@ -59,6 +59,8 @@ public class AuthController {
         System.out.println("用户的用户名："+authResponse.getData().getUsername());
         System.out.println("用户的昵称：" + authResponse.getData().getNickname());
         System.out.println("用户的头像：" + authResponse.getData().getAvatar());
+        System.out.println("用户的来源：" + authResponse.getData().getSource());
+
         //打印用户的Token中的信息
         System.out.println("access_token：" + authResponse.getData().getToken().getAccessToken());
         
@@ -74,6 +76,8 @@ public class AuthController {
             user.setAccountId(authResponse.getData().getUuid());
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
+            user.setAvatarUrl(authResponse.getData().getAvatar());
+            user.setSource(authResponse.getData().getSource());
             
             //将token的值存入数据库
             userMapper.insert(user);
@@ -82,6 +86,7 @@ public class AuthController {
             response.addCookie(new Cookie("token", token));
             return "redirect:/";
         }
+        
         System.out.println("登录失败");
         return "redirect:/";
     }

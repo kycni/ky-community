@@ -1,17 +1,14 @@
-package com.kycni.community.model;
+package com.kycni.community.dto;
 
-import lombok.AllArgsConstructor;
+import com.kycni.community.model.User;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * @author Kycni
- * @date 2022/1/17 18:41
+ * @date 2022/1/18 8:15
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class Question {
+public class QuestionDTO {
     
     private Integer id;
     private String title;
@@ -23,4 +20,6 @@ public class Question {
     private Integer viewCount;
     private Integer commentCount;
     private Integer likeCount;
+    private User user;
+    
 }
