@@ -14,7 +14,7 @@
                     data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only">Kycni社区</span>
             </button>
-            <a class="navbar-brand" href="#">Kycni社区</a>
+            <a class="navbar-brand" href="/">Kycni社区</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <form class="navbar-form navbar-left">
@@ -27,7 +27,7 @@
                 <li th:if="${session.user != null}">
                     <a href="/publish">发布</a>
                 </li>
-                <li class="dropdown" th:if="${session.user != null}">
+                <li class="dropdown" th:if= "${session.user != null}">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false" th:text="${session.user.getName()}"><span class="caret"></span></a>
                     <ul class="dropdown-menu">

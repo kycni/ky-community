@@ -85,6 +85,7 @@ public class AuthController {
             request.getSession().setAttribute("user", user);
             Cookie cookie = new Cookie("token", token);
             cookie.setMaxAge(Integer.MAX_VALUE);
+            cookie.setPath(request.getContextPath() + "/");
             response.addCookie(cookie);
             return "redirect:/";
         }

@@ -1,9 +1,9 @@
 package com.kycni.community.service;
 
-import com.kycni.community.dto.PaginationDto;
-import com.kycni.community.dto.QuestionDto;
 import com.kycni.community.dao.QuestionMapper;
 import com.kycni.community.dao.UserMapper;
+import com.kycni.community.dto.PaginationDTO;
+import com.kycni.community.dto.QuestionDTO;
 import com.kycni.community.model.Question;
 import com.kycni.community.model.User;
 import org.springframework.beans.BeanUtils;
@@ -29,43 +29,98 @@ public class QuestionService {
     @Autowired
     private UserMapper userMapper;
 
-    public PaginationDto indexList(Integer page, Integer size) {
+    public PaginationDTO list(Integer page, Integer size) {
         
         /*创建类的对象*/
-        PaginationDto paginationDto = new PaginationDto();
+        PaginationDTO paginationDTO = new PaginationDTO();
+        int totalPage;
         Integer totalCount = questionMapper.count();
+        
+        if (totalCount % size == 0) {
+            totalPage = totalCount / size;
+        } else {
+            totalPage = totalCount / size + 1;
+        }
+        
         /*应用类的分页方法*/
-        paginationDto.setPagination(totalCount, page, size);
+        paginationDTO.setPagination(totalPage, page);
         
         /*设置当前页*/
         if (page < 1) {
             page = 1;
         }
         
-        if (page > paginationDto.getTotalPage()) {
-            page = paginationDto.getTotalPage();
+        if (page > paginationDTO.getTotalPage()) {
+            page = paginationDTO.getTotalPage();
         }
 
-        //设置偏移量: size*(page-1): 跳过的数据行
+        /*设置偏移量: size*(page-1): 跳过的数据行*/
         Integer offset = size * (page - 1);
-        /*获取整体列表数组    显示逻辑数据显示的起始和结束,首页第一个数据,最后一个数据*/
-        List<Question> questions = questionMapper.list(offset, size);
         
-        /*
-        获取列表中的对象  包含question和user表中信息  将对象加入整体列表数组
-         */
-        List<QuestionDto> questionDtos = new ArrayList<>();
-        for (Question question : questions) {
-            //调用方法初始化引用对象
+        /*获取问题集合  显示逻辑数据显示的起始和结束,首页第一个数据对象,最后一个数组*/
+        List<Question> questionList = questionMapper.list(offset, size);
+        
+        /*获取主页列表（包含问题集和问题对应的用户信息）*/
+        List<QuestionDTO> questionDTOList = new ArrayList<>();
+        
+        for (Question question : questionList) {
             User user = userMapper.findById(question.getCreator());
-            QuestionDto questionDto = new QuestionDto();
-            BeanUtils.copyProperties(question, questionDto);
-            questionDto.setUser(user);
-            questionDtos.add(questionDto);
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(question, questionDTO);
+            questionDTO.setUser(user);
+            questionDTOList.add(questionDTO);
         }
         
-        paginationDto.setQuestions(questionDtos);
-        return paginationDto;
+        paginationDTO.setQuestionDTOList(questionDTOList);
+        return paginationDTO;
+        
+    }
+
+    public PaginationDTO list(Integer userId, Integer page, Integer size) {
+
+        /*创建类的对象*/
+        PaginationDTO paginationDTO = new PaginationDTO();
+        int totalPage;
+        Integer totalCount = questionMapper.countByUserId(userId);
+
+        if (totalCount % size == 0) {
+            totalPage = totalCount / size;
+        } else {
+            totalPage = totalCount / size + 1;
+        }
+
+        /*应用类的分页方法*/
+        paginationDTO.setPagination(totalPage, page);
+
+        /*设置当前页*/
+        if (page < 1) {
+            page = 1;
+        }
+
+        if (page > paginationDTO.getTotalPage()) {
+            page = paginationDTO.getTotalPage();
+        }
+
+        /*设置偏移量: size*(page-1): 跳过的数据行*/
+        Integer offset = size * (page - 1);
+
+        /*获取问题集合  显示逻辑数据显示的起始和结束,首页第一个数据对象,最后一个数组*/
+        List<Question> questionList = questionMapper.listByUserId(userId, offset, size);
+
+        /*获取主页列表（包含问题集和问题对应的用户信息）*/
+        List<QuestionDTO> questionDTOList = new ArrayList<>();
+        
+        for (Question question : questionList) {
+            User user = userMapper.findById(question.getCreator());
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(question, questionDTO);
+            questionDTO.setUser(user);
+            questionDTOList.add(questionDTO);
+        }
+
+        paginationDTO.setQuestionDTOList(questionDTOList);
+        return paginationDTO;
+
     }
 }
 

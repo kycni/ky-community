@@ -29,4 +29,10 @@ public interface QuestionMapper {
     @Select("SELECT * FROM QUESTION ORDER BY GMT_CREATE DESC LIMIT #{offset},#{size}")
     List<Question> list(@Param(value = "offset") Integer offset, @Param(value = "size") Integer size);
 
+    @Select("select count(1) from question where creator = #{userId}")
+    Integer countByUserId(@Param("userId") Integer userId);
+    
+    @Select("select * from question where creator = #{userId} ORDER BY GMT_CREATE DESC limit #{offset},#{size}")
+    List<Question> listByUserId(@Param("userId") Integer userId, @Param(value = "offset") Integer offset, @Param(value = "size") Integer size);
+
 }

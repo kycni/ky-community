@@ -1,6 +1,8 @@
 package com.kycni.community.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,40 +12,32 @@ import java.util.List;
  * @date 2022/1/18 20:57
  */
 @Data
-public class PaginationDto {
-    private List<QuestionDto> questions;
-    private boolean showPrevious;
-    private boolean showFirstPage;
-    private boolean showNext;
-    private boolean showEndPage;
+@AllArgsConstructor
+@NoArgsConstructor
+public class PaginationDTO {
+    
+    private List<QuestionDTO> questionDTOList;
+    private Boolean showPrevious;
+    private Boolean showFirstPage;
+    private Boolean showNext;
+    private Boolean showEndPage;
     private Integer page;
     private List<Integer> pages = new ArrayList<>();
     private Integer totalPage;
 
-    public void setPagination(Integer totalCount, Integer page, Integer size) {
+    public void setPagination(Integer totalPage, Integer page) {
         
-        if (totalCount % size == 0) {
-            totalPage = totalCount / size;
-        } else {
-            totalPage = totalCount / size + 1;
-        }
-
-        if (page < 1) {
-            page = 1;
-        }
-
-        if (page > totalPage) {
-            page = totalPage;
-        }
-
         this.page = page;
-
+        this.totalPage = totalPage;
+        
         pages.add(page);
+        
+        /*小于3，显示左边三个*/
         for (int i = 1; i <= 3; i++) {
             if (page - i > 0) {
                 pages.add(0, page - i);
             }
-
+        /*大于3, 显示右边三个*/
             if (page + i <= totalPage) {
                 pages.add(page + i);
             }

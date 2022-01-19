@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionDto {
+
+public class QuestionDTO {
     
     private Integer id;
     private String title;
