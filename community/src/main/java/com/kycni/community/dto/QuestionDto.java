@@ -1,14 +1,18 @@
 package com.kycni.community.dto;
 
 import com.kycni.community.model.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Kycni
  * @date 2022/1/18 8:15
  */
 @Data
-public class QuestionDTO {
+@AllArgsConstructor
+@NoArgsConstructor
+public class QuestionDto {
     
     private Integer id;
     private String title;

@@ -1,6 +1,6 @@
 package com.kycni.community.controller;
 
-import com.kycni.community.mapper.UserMapper;
+import com.kycni.community.dao.UserMapper;
 import com.kycni.community.model.User;
 import com.xkcoding.http.config.HttpConfig;
 import me.zhyd.oauth.config.AuthConfig;
@@ -83,7 +83,9 @@ public class AuthController {
             userMapper.insert(user);
             // 登录成功，将token的值存入到cookie中,写cookie 和session
             request.getSession().setAttribute("user", user);
-            response.addCookie(new Cookie("token", token));
+            Cookie cookie = new Cookie("token", token);
+            cookie.setMaxAge(Integer.MAX_VALUE);
+            response.addCookie(cookie);
             return "redirect:/";
         }
         

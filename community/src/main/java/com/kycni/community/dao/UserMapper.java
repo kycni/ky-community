@@ -1,4 +1,4 @@
-package com.kycni.community.mapper;
+package com.kycni.community.dao;
 
 import com.kycni.community.model.User;
 import org.apache.ibatis.annotations.*;

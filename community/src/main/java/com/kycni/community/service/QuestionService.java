@@ -1,8 +1,9 @@
 package com.kycni.community.service;
 
-import com.kycni.community.dto.QuestionDTO;
-import com.kycni.community.mapper.QuestionMapper;
-import com.kycni.community.mapper.UserMapper;
+import com.kycni.community.dto.PaginationDto;
+import com.kycni.community.dto.QuestionDto;
+import com.kycni.community.dao.QuestionMapper;
+import com.kycni.community.dao.UserMapper;
 import com.kycni.community.model.Question;
 import com.kycni.community.model.User;
 import org.springframework.beans.BeanUtils;
@@ -28,17 +29,43 @@ public class QuestionService {
     @Autowired
     private UserMapper userMapper;
 
-    public List<QuestionDTO> list() {
-        List<Question> questions = questionMapper.list();
-        List<QuestionDTO> questionDTOList = new ArrayList<>();
-        for (Question question : questions) {
-            User user = userMapper.findById(question.getId());
-            QuestionDTO questionDTO = new QuestionDTO();
-            BeanUtils.copyProperties(question, questionDTO);
-            questionDTO.setUser(user);
-            questionDTOList.add(questionDTO);
+    public PaginationDto indexList(Integer page, Integer size) {
+        
+        /*创建类的对象*/
+        PaginationDto paginationDto = new PaginationDto();
+        Integer totalCount = questionMapper.count();
+        /*应用类的分页方法*/
+        paginationDto.setPagination(totalCount, page, size);
+        
+        /*设置当前页*/
+        if (page < 1) {
+            page = 1;
         }
-        return questionDTOList;
+        
+        if (page > paginationDto.getTotalPage()) {
+            page = paginationDto.getTotalPage();
+        }
+
+        //设置偏移量: size*(page-1): 跳过的数据行
+        Integer offset = size * (page - 1);
+        /*获取整体列表数组    显示逻辑数据显示的起始和结束,首页第一个数据,最后一个数据*/
+        List<Question> questions = questionMapper.list(offset, size);
+        
+        /*
+        获取列表中的对象  包含question和user表中信息  将对象加入整体列表数组
+         */
+        List<QuestionDto> questionDtos = new ArrayList<>();
+        for (Question question : questions) {
+            //调用方法初始化引用对象
+            User user = userMapper.findById(question.getCreator());
+            QuestionDto questionDto = new QuestionDto();
+            BeanUtils.copyProperties(question, questionDto);
+            questionDto.setUser(user);
+            questionDtos.add(questionDto);
+        }
+        
+        paginationDto.setQuestions(questionDtos);
+        return paginationDto;
     }
 }
 

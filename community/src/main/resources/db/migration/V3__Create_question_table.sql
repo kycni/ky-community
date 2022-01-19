@@ -9,5 +9,5 @@ CREATE TABLE question
     comment_count INT DEFAULT 0,
     view_count INT DEFAULT 0,
     like_count INT DEFAULT 0,
-    tag VARCHAR(256)
+    tag VARCHAR(30)
 );
