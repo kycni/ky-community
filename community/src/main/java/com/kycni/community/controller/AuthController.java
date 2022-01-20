@@ -2,6 +2,7 @@ package com.kycni.community.controller;
 
 import com.kycni.community.dao.UserMapper;
 import com.kycni.community.model.User;
+import com.kycni.community.service.UserService;
 import com.xkcoding.http.config.HttpConfig;
 import me.zhyd.oauth.config.AuthConfig;
 import me.zhyd.oauth.model.AuthCallback;
@@ -12,6 +13,7 @@ import me.zhyd.oauth.request.AuthRequest;
 import me.zhyd.oauth.utils.AuthStateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.Cookie;
@@ -28,6 +30,9 @@ public class AuthController {
     
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private UserService userService;
     
     /**
      * @param response 授权获取登录地址
@@ -39,6 +44,16 @@ public class AuthController {
         String authorizeUrl = authRequest.authorize(AuthStateUtils.createState());
         System.out.println(authorizeUrl);
         response.sendRedirect(authorizeUrl);
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response) {
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 
     /**
@@ -74,13 +89,12 @@ public class AuthController {
             user.setName(authResponse.getData().getNickname());
             user.setBio(authResponse.getData().getRemark());
             user.setAccountId(authResponse.getData().getUuid());
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(authResponse.getData().getAvatar());
             user.setSource(authResponse.getData().getSource());
             
-            //将token的值存入数据库
-            userMapper.insert(user);
+            // 创建更新用户
+            userService.createOrUpdate(user);
+            
             // 登录成功，将token的值存入到cookie中,写cookie 和session
             request.getSession().setAttribute("user", user);
             Cookie cookie = new Cookie("token", token);
