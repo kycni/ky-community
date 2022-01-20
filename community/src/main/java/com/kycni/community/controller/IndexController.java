@@ -1,9 +1,8 @@
 package com.kycni.community.controller;
 
-import com.kycni.community.dao.QuestionMapper;
-import com.kycni.community.dao.UserMapper;
+import com.kycni.community.mapper.QuestionMapper;
+import com.kycni.community.mapper.UserMapper;
 import com.kycni.community.dto.PaginationDTO;
-import com.kycni.community.model.User;
 import com.kycni.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**

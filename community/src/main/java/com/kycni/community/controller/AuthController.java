@@ -1,6 +1,6 @@
 package com.kycni.community.controller;
 
-import com.kycni.community.dao.UserMapper;
+import com.kycni.community.mapper.UserMapper;
 import com.kycni.community.model.User;
 import com.kycni.community.service.UserService;
 import com.xkcoding.http.config.HttpConfig;

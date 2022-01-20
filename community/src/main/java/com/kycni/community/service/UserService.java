@@ -1,6 +1,6 @@
 package com.kycni.community.service;
 
-import com.kycni.community.dao.UserMapper;
+import com.kycni.community.mapper.UserMapper;
 import com.kycni.community.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

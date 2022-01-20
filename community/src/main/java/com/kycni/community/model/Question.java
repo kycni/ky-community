@@ -1,27 +1,46 @@
 package com.kycni.community.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import javax.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
-/**
- * @author Kycni
- * @date 2022/1/17 18:41
- */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@Accessors(chain = true)
+@Table(name = "`QUESTION`")
 public class Question {
-    
+    @Id
+    @Column(name = "`ID`")
+    @GeneratedValue(generator = "JDBC")
     private Integer id;
+
+    @Column(name = "`TITLE`")
     private String title;
-    private String description;
-    private String tag;
+
+    @Column(name = "`GMT_CREATE`")
     private Long gmtCreate;
+
+    @Column(name = "`GMT_MODIFIED`")
     private Long gmtModified;
+
+    @Column(name = "`CREATOR`")
     private Integer creator;
-    private Integer viewCount;
+
+    @Column(name = "`COMMENT_COUNT`")
     private Integer commentCount;
+
+    @Column(name = "`VIEW_COUNT`")
+    private Integer viewCount;
+
+    @Column(name = "`LIKE_COUNT`")
     private Integer likeCount;
-    
+
+    @Column(name = "`TAG`")
+    private String tag;
+
+    @Column(name = "`DESCRIPTION`")
+    private String description;
 }

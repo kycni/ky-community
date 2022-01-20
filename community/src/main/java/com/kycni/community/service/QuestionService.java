@@ -1,7 +1,7 @@
 package com.kycni.community.service;
 
-import com.kycni.community.dao.QuestionMapper;
-import com.kycni.community.dao.UserMapper;
+import com.kycni.community.mapper.QuestionMapper;
+import com.kycni.community.mapper.UserMapper;
 import com.kycni.community.dto.PaginationDTO;
 import com.kycni.community.dto.QuestionDTO;
 import com.kycni.community.model.Question;
@@ -28,7 +28,7 @@ public class QuestionService {
 
     @Autowired
     private UserMapper userMapper;
-
+    
     public PaginationDTO list(Integer page, Integer size) {
         
         /*创建类的对象*/
@@ -130,6 +130,19 @@ public class QuestionService {
         User user = userMapper.findById(question.getCreator());
         questionDTO.setUser(user);
         return questionDTO;
+    }
+
+    public void createOrUpdate(Question question) {
+        if (question.getId() == null) {
+            // 创建
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(question.getGmtCreate());
+            questionMapper.insert(question);
+        } else {
+            // 更新
+            question.setGmtModified(question.getGmtCreate());
+            questionMapper.update(question);
+        }
     }
 }
 

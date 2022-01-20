@@ -1,26 +1,43 @@
 package com.kycni.community.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import javax.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
-/**
- * @author Kycni
- * @date 2022/1/16 12:32
- */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@Accessors(chain = true)
+@Table(name = "`USER`")
 public class User {
-    
+    @Id
+    @Column(name = "`ID`")
+    @GeneratedValue(generator = "JDBC")
     private Integer id;
-    private String name;
+
+    @Column(name = "`ACCOUNT_ID`")
     private String accountId;
+
+    @Column(name = "`NAME`")
+    private String name;
+
+    @Column(name = "`BIO`")
     private String bio;
-    private String token;
-    private Long gmtCreate;
-    private Long gmtModified;
+
+    @Column(name = "`AVATAR_URL`")
     private String avatarUrl;
+
+    @Column(name = "`TOKEN`")
+    private String token;
+
+    @Column(name = "`GMT_CREATE`")
+    private Long gmtCreate;
+
+    @Column(name = "`GMT_MODIFIED`")
+    private Long gmtModified;
+
+    @Column(name = "`SOURCE`")
     private String source;
-    
 }

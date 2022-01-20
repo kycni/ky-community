@@ -1,13 +1,11 @@
 package com.kycni.community.interceptor;
 
-import com.kycni.community.dao.UserMapper;
+import com.kycni.community.mapper.UserMapper;
 import com.kycni.community.model.User;
-import com.sun.prism.Texture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
