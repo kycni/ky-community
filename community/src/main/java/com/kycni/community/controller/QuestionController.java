@@ -17,11 +17,15 @@ public class QuestionController {
 
     @Autowired
     private QuestionService questionService;
-
+    
     @GetMapping("/question/{id}")
-    public String question(@PathVariable(name = "id") Integer id,
+    public String questionon(@PathVariable(name = "id") Integer id,
                            Model model) {
+        /*通过问题页，返回问题和用户信息，*/
         QuestionDTO questionDTO = questionService.getById(id);
+        /*浏览一次问题页，浏览数加1*/
+        questionService.incView(id);
+        /*将用户问题和用户信息返还给前端*/
         model.addAttribute("question", questionDTO);
         return "question";
     }

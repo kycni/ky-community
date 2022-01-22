@@ -33,57 +33,46 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
-    
+
     /**
-     * @param response 授权获取登录地址
+     * @param response 返回授权登录url
+     * @method getAuthRequest() 获取登陆地址的方法
      * @throws IOException Io异常
      */
     @RequestMapping("/login/github")
-    public void renderAuth(HttpServletResponse response) throws IOException {
+    public void loginAuth(HttpServletResponse response) throws IOException {
+        /*获得登陆地址请求*/
         AuthRequest authRequest = getAuthRequest();
+        /*返回带state的授权登录url*/
         String authorizeUrl = authRequest.authorize(AuthStateUtils.createState());
-        System.out.println(authorizeUrl);
         response.sendRedirect(authorizeUrl);
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request,
-                         HttpServletResponse response) {
-        request.getSession().removeAttribute("user");
-        Cookie cookie = new Cookie("token", null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
-        return "redirect:/";
-    }
-
     /**
-     * @param callback 验证code 执行登录请求，获取用户信息
+     * @param callback 回调地址，验证code 执行登录请求，获取用户信息
      * @return 返回首页
      */
     @RequestMapping("/callback/github")
     public Object loginCallback(AuthCallback callback,
                                 HttpServletResponse response,
                                 HttpServletRequest request) {
+        /*创建一个请求对象*/
         AuthRequest authRequest = getAuthRequest();
-        // 根据返回的参数，执行登录请求（获取用户信息）
-        AuthResponse<AuthUser> authResponse = authRequest.login(callback);
-        
-        // 打印授权返回代码（2000表示成功，可以用来判断用户登录成功与否）
-        //打印用户的昵称、ID、头像等基本信息
-        System.out.println("用户的UnionID：" + authResponse.getData().getUuid());
-        System.out.println("用户的用户名："+authResponse.getData().getUsername());
-        System.out.println("用户的昵称：" + authResponse.getData().getNickname());
-        System.out.println("用户的头像：" + authResponse.getData().getAvatar());
-        System.out.println("用户的来源：" + authResponse.getData().getSource());
-
-        //打印用户的Token中的信息
-        System.out.println("access_token：" + authResponse.getData().getToken().getAccessToken());
-        
         /*
-        保存用户信息与登录状态
+           调用请求对象的login方法
+           根据接收的回调参数，执行登录请求
+          （通过泛型，将类型转换为AuthUser获取用户信息）
+           使用到泛型
+        */
+        AuthResponse<AuthUser> authResponse = authRequest.login(callback);
+        /*
+            判断是否登录成功
+            如果获取到了用户信息，则保存用户的登录信息
         */
         if (authResponse.getData().getNickname() != null) {
+            /*创建一个用户*/
             User user = new User();
+            /*UUID，唯一不可变标识符，保存唯一token，后面用来与cookie绑定*/
             String token = UUID.randomUUID().toString();
             user.setToken(token);
             user.setName(authResponse.getData().getNickname());
@@ -92,7 +81,7 @@ public class AuthController {
             user.setAvatarUrl(authResponse.getData().getAvatar());
             user.setSource(authResponse.getData().getSource());
             
-            // 创建更新用户
+            /*将创建和更新用户信息的方法封装在一起，减少代码的冗余*/
             userService.createOrUpdate(user);
             
             // 登录成功，将token的值存入到cookie中,写cookie 和session
@@ -102,6 +91,7 @@ public class AuthController {
             cookie.setPath(request.getContextPath() + "/");
             response.addCookie(cookie);
             return "redirect:/";
+            
         }
         
         System.out.println("登录失败");
@@ -124,5 +114,16 @@ public class AuthController {
                         .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 7890)))
                         .build())
                 .build());
+    }
+
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response) {
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 }

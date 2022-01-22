@@ -2,6 +2,7 @@ package com.kycni.community.mapper;
 
 import com.kycni.community.model.Question;
 import org.apache.ibatis.annotations.*;
+import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
@@ -9,12 +10,13 @@ import java.util.List;
  * @author Kycni
  * @date 2022/1/17 18:42
  */
-@Mapper
-public interface QuestionMapper extends tk.mybatis.mapper.common.Mapper<Question> {
+@org.apache.ibatis.annotations.Mapper
+public interface QuestionMapper extends Mapper<Question> {
     /**
      * 在数据库中创建问题表
      */
-    
+    @Update("UPDATE QUESTION SET VIEW_COUNT = VIEW_COUNT + #{viewCount} where id = #{id}")
+    int incView(Question record);
     
     @Select("select count(1) from question")
     Integer count();

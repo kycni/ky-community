@@ -14,6 +14,9 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
+    /**
+     * 对用户信息的创建和修改操作
+     */
     public void createOrUpdate(User user) {
         User dbUser = userMapper.findByAccountId(user.getAccountId());
         if (dbUser == null) {
