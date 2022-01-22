@@ -10,13 +10,11 @@ import java.util.List;
  * @date 2022/1/17 18:42
  */
 @Mapper
-public interface QuestionMapper {
+public interface QuestionMapper extends tk.mybatis.mapper.common.Mapper<Question> {
     /**
      * 在数据库中创建问题表
      */
     
-    @Insert("insert into question (title,description,gmt_create,gmt_modified,creator,tag) values (#{title},#{description},#{gmtCreate},#{gmtModified},#{creator},#{tag})")
-    void insert(Question question);
     
     @Select("select count(1) from question")
     Integer count();

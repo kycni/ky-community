@@ -1,5 +1,7 @@
 package com.kycni.community.service;
 
+import com.kycni.community.exception.CustomizeException;
+import com.kycni.community.exception.CustomizeEnumErrorInfo;
 import com.kycni.community.mapper.QuestionMapper;
 import com.kycni.community.mapper.UserMapper;
 import com.kycni.community.dto.PaginationDTO;
@@ -113,6 +115,7 @@ public class QuestionService {
         for (Question question : questionList) {
             User user = userMapper.findById(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
+   
             BeanUtils.copyProperties(question, questionDTO);
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
@@ -124,7 +127,10 @@ public class QuestionService {
     }
 
     public QuestionDTO getById(Integer id) {
-        Question question = questionMapper.getById(id);
+        Question question = questionMapper.selectByPrimaryKey(id);
+        if (question == null) {
+            throw new CustomizeException(CustomizeEnumErrorInfo.QUESTION_NOT_FIND);
+        }
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question, questionDTO);
         User user = userMapper.findById(question.getCreator());
