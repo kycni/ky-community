@@ -37,5 +37,8 @@
         <table tableName="question">
             <generatedKey column="id" sqlStatement="JDBC"/>
         </table>
+        <table tableName="comment">
+            <generatedKey column="id" sqlStatement="JDBC"/>
+        </table>
     </context>
 </generatorConfiguration>

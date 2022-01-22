@@ -26,7 +26,8 @@
             <ul class="nav navbar-nav navbar-right">
                 <li th:if="${session.user != null}">
                     <a href="/publish">提问</a>
-                </li>
+                
+                <!--如果用户处于登录状态，则触发dropdown下拉效果-->
                 <li class="dropdown" th:if="${session.user != null}">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">
@@ -35,11 +36,12 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="/profile/questions">我的问题</a></li>
-                        <li><a href="/logout">退出登录</a></li>
+                        <li><a href="#">退出登录</a></li>
                     </ul>
                 </li>
+                <!--如果用户无登录状态-->
                 <li th:if="${session.user == null}">
-                    <a href="http://localhost:7888/login/github">登录</a>
+                    <a href="/login/github">登录</a>
                 </li>
 
             </ul>

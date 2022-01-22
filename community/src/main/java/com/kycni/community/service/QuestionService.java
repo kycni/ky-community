@@ -150,5 +150,14 @@ public class QuestionService {
             questionMapper.update(question);
         }
     }
+
+    
+    public void incView(Integer id) {
+        /*创建一个问题对象*/
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionMapper.incView(question);
+    }
 }
 

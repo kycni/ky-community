@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class CustomizeExceptionHandler extends ResponseEntityExceptionHandler {
     
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(CustomizeException.class)
     ModelAndView handleControllerException(Throwable e, Model model) {
 
         if (e instanceof CustomizeException) {
