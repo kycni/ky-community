@@ -9,6 +9,7 @@ import com.kycni.community.model.Comment;
 import com.kycni.community.model.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Kycni
@@ -20,7 +21,14 @@ public class CommentService {
     private CommentMapper commentMapper;
     @Autowired
     private QuestionMapper questionMapper;
-    
+
+    /**
+     * 插入评论
+     * 当插入成功，将回复数也包裹在同一个事务里
+     * 当其中有一个失败，则全部回滚到之前。
+     * @param comment 评论
+     */
+    @Transactional
     public void insert(Comment comment) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
@@ -29,7 +37,7 @@ public class CommentService {
         if (comment.getType() == null || !CommentTypeEnum.isExist(comment.getType())) {
             throw new CustomizeException(CustomizeErrorCode.TYPE_PARAM_WRONG);
         }
-        if (comment.getType() == CommentTypeEnum.COMMENT.getType()) {
+        if (comment.getType().equals(CommentTypeEnum.COMMENT.getType())) {
             // 回复评论
             Comment dbComment = commentMapper.selectByPrimaryKey(comment.getParentId());
             if (dbComment == null) {
