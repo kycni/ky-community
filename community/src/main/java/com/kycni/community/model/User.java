@@ -15,7 +15,7 @@ public class User {
     @Id
     @Column(name = "`ID`")
     @GeneratedValue(generator = "JDBC")
-    private Integer id;
+    private Long id;
 
     @Column(name = "`ACCOUNT_ID`")
     private String accountId;

@@ -23,8 +23,11 @@ public class Comment {
     @Column(name = "`TYPE`")
     private Integer type;
 
+    @Column(name = "`CONTENT`")
+    private String content;
+
     @Column(name = "`COMMENTATOR`")
-    private Integer commentator;
+    private Long commentator;
 
     @Column(name = "`GMT_CREATE`")
     private Long gmtCreate;
@@ -34,7 +37,4 @@ public class Comment {
 
     @Column(name = "`LIKE_COUNT`")
     private Long likeCount;
-
-    @Column(name = "`CONTENT`")
-    private String content;
 }

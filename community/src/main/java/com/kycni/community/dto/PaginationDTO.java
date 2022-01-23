@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 分页dto
+ *
  * @author Kycni
  * @date 2022/1/18 20:57
  */

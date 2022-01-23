@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * 问题dto
+ *
  * @author Kycni
  * @date 2022/1/18 8:15
  */
@@ -14,14 +16,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class QuestionDTO {
-    
-    private Integer id;
+    /**
+     * 前后端交流用，前端获取不到值检查这里!!
+     * 将id Integer类型替换为Long类型，后前端获取不到值
+     */
+    private Long id;
     private String title;
     private String description;
     private String tag;
     private Long gmtCreate;
     private Long gmtModified;
-    private Integer creator;
+    private Long creator;
     private Integer viewCount;
     private Integer commentCount;
     private Integer likeCount;

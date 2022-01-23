@@ -15,8 +15,12 @@ public interface QuestionMapper extends Mapper<Question> {
     /**
      * 在数据库中创建问题表
      */
+    
     @Update("UPDATE QUESTION SET VIEW_COUNT = VIEW_COUNT + #{viewCount} where id = #{id}")
     int incView(Question record);
+    
+    @Update("UPDATE QUESTION SET COMMENT_COUNT = COMMENT_COUNT + #{commentCount} where id = #{id}")
+    void incCommentCount(Question question);
     
     @Select("select count(1) from question")
     Integer count();
@@ -28,14 +32,13 @@ public interface QuestionMapper extends Mapper<Question> {
     List<Question> list(@Param(value = "offset") Integer offset, @Param(value = "size") Integer size);
 
     @Select("select count(1) from question where creator = #{userId}")
-    Integer countByUserId(@Param("userId") Integer userId);
+    Integer countByUserId(@Param("userId") Long userId);
     
     @Select("select * from question where creator = #{userId} ORDER BY GMT_CREATE DESC limit #{offset},#{size}")
-    List<Question> listByUserId(@Param("userId") Integer userId, @Param(value = "offset") Integer offset, @Param(value = "size") Integer size);
-
-    @Select("select * from question where id = #{id}")
-    Question getById(@Param("id") Integer id);
-
+    List<Question> listByUserId(@Param("userId") Long userId, @Param(value = "offset") Integer offset, @Param(value = "size") Integer size);
+    
     @Update("update question set title = #{title}, description = #{description}, gmt_modified = #{gmtModified}, tag = #{tag} where id = #{id}")
     void update(Question question);
+
+
 }
