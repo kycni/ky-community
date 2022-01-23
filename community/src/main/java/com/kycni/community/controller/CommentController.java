@@ -1,5 +1,6 @@
 package com.kycni.community.controller;
 
+import com.kycni.community.dto.CommentCreateDTO;
 import com.kycni.community.dto.CommentDTO;
 import com.kycni.community.dto.ResultDTO;
 import com.kycni.community.exception.CustomizeErrorCode;
@@ -31,7 +32,7 @@ public class CommentController {
      */
     @ResponseBody
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
-    public Object post(@RequestBody CommentDTO commentDTO,
+    public Object post(@RequestBody CommentCreateDTO commentCreateDTO,
                        HttpServletRequest request) {
 
         User user = (User) request.getSession().getAttribute("user");
@@ -40,10 +41,10 @@ public class CommentController {
         }
         
         Comment comment = new Comment();
-        comment.setParentId(commentDTO.getParentId());
+        comment.setParentId(commentCreateDTO.getParentId());
         /*content还要引入questionMapper去查，需要引用Service*/
-        comment.setContent(commentDTO.getContent());
-        comment.setType(commentDTO.getType());
+        comment.setContent(commentCreateDTO.getContent());
+        comment.setType(commentCreateDTO.getType());
         comment.setGmtModified(System.currentTimeMillis());
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setCommentator(user.getId());
