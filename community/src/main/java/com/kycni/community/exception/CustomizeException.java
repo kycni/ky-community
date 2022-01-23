@@ -6,14 +6,20 @@ package com.kycni.community.exception;
  */
 public class CustomizeException extends RuntimeException {
     
-    private final String message;
+    private String message;
+    private Integer code;
             
-    public CustomizeException(CustomizeErrorInfo customizeExceptionErrorInfo) {
+    public CustomizeException(ICustomizeErrorCode customizeExceptionErrorInfo) {
+        this.code = customizeExceptionErrorInfo.getCode();
         this.message = customizeExceptionErrorInfo.getMessage();
     }
 
     @Override
     public String getMessage() {
         return message;
+    }
+    
+    public Integer getCode() {
+        return code;
     }
 }

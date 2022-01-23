@@ -2,22 +2,17 @@ package com.kycni.community.mapper;
 
 import com.kycni.community.model.User;
 import org.apache.ibatis.annotations.*;
-import tk.mybatis.mapper.common.Mapper;
+import tk.mybatis.mapper.common.ExampleMapper;
 
 /**
  * @author Kycni
  * @date 2022/1/16 13:01
  */
-@org.apache.ibatis.annotations.Mapper
-public interface UserMapper extends Mapper<User> {
-    /**
-     * 插入
-     *
-     * @param user 用户
-     * @return int
-     */
-    @Override
-    int insert(User user);
+@Mapper
+public interface UserMapper {
+
+    @Insert("insert into user (name,account_id,token,gmt_create,gmt_modified,avatar_url,bio,source) values (#{name},#{accountId},#{token},#{gmtCreate},#{gmtModified},#{avatarUrl},#{bio},#{source})")
+    void insert(User user);
 
     /**
      * 找到了令牌
@@ -29,11 +24,11 @@ public interface UserMapper extends Mapper<User> {
     User findByToken(@Param("token") String token);
     
     @Select("select * from user where id = #{id}")
-    User findById(@Param("id") Integer id);
+    User findById(@Param("id") Long id);
 
     @Select("select * from user where account_id = #{accountId}")
     User findByAccountId(@Param("accountId") String accountId);
 
-    @Update("update user set name = #{name}, token = #{token}, gmt_modified = #{gmtModified},avatar_url = #{avatarUrl} where id = #{id}")
+    @Update("update user set name = #{name}, token = #{token}, gmt_modified = #{gmtModified},avatar_url = #{avatarUrl}, bio = #{bio}, source = #{source} where id = #{id}")
     void update(User user);
 }

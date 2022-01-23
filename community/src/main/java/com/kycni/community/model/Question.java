@@ -15,7 +15,7 @@ public class Question {
     @Id
     @Column(name = "`ID`")
     @GeneratedValue(generator = "JDBC")
-    private Integer id;
+    private Long id;
 
     @Column(name = "`TITLE`")
     private String title;
@@ -27,7 +27,7 @@ public class Question {
     private Long gmtModified;
 
     @Column(name = "`CREATOR`")
-    private Integer creator;
+    private Long creator;
 
     @Column(name = "`COMMENT_COUNT`")
     private Integer commentCount;

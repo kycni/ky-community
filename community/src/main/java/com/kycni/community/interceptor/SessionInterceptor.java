@@ -22,12 +22,12 @@ public class SessionInterceptor implements HandlerInterceptor {
     private UserMapper userMapper;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
         Cookie[] cookies = request.getCookies();
         if (cookies != null && cookies.length != 0) {
             for (Cookie cookie : cookies) {
-                if ("token".equals(cookie.getName())) {
+                if (cookie.getName().equals("token")) {
                     String token = cookie.getValue();
                     User user = userMapper.findByToken(token);
                     if (user != null) {

@@ -85,10 +85,9 @@ public class AuthController {
             userService.createOrUpdate(user);
             
             // 登录成功，将token的值存入到cookie中,写cookie 和session
-            request.getSession().setAttribute("user", user);
             Cookie cookie = new Cookie("token", token);
+            cookie.setPath("/");
             cookie.setMaxAge(Integer.MAX_VALUE);
-            cookie.setPath(request.getContextPath() + "/");
             response.addCookie(cookie);
             return "redirect:/";
             

@@ -4,6 +4,9 @@ import com.kycni.community.mapper.UserMapper;
 import com.kycni.community.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
+
+import java.util.List;
 
 /**
  * @author Kycni
@@ -20,16 +23,18 @@ public class UserService {
     public void createOrUpdate(User user) {
         User dbUser = userMapper.findByAccountId(user.getAccountId());
         if (dbUser == null) {
-            // 插入用户
+            // 插入
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
             userMapper.insert(user);
         } else {
-            //更新用户的登录信息
+            //更新
             dbUser.setGmtModified(System.currentTimeMillis());
             dbUser.setAvatarUrl(user.getAvatarUrl());
             dbUser.setName(user.getName());
             dbUser.setToken(user.getToken());
+            dbUser.setBio(user.getBio());
+            dbUser.setSource(user.getSource());
             userMapper.update(dbUser);
         }
     }
