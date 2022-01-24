@@ -23,13 +23,13 @@ function comment2target(targetId, type, content) {
             "type": type
         }),
         success: function (response) {
-            if (response.code === 200) {
+            if (response.code == 200) {
                 window.location.reload();
             } else {
-                if (response.code === 2003) {
+                if (response.code == 2003) {
                     var isAccepted = confirm(response.message);
                     if (isAccepted) {
-                        window.open("http://localhost:7888/login/github");
+                        window.open("https://github.com/login/oauth/authorize?client_id=69e311bad26e3f579725&redirect_uri=http://localhost:8887/callback&scope=user&state=1");
                         window.localStorage.setItem("closable", true);
                     }
                 } else {
@@ -46,15 +46,16 @@ function comment(e) {
     var content = $("#input-" + commentId).val();
     comment2target(commentId, 2, content);
 }
+
 /**
  * 展开二级评论
  */
 function collapseComments(e) {
-    const id = e.getAttribute("data-id");
-    const comments = $("#comment-" + id);
+    var id = e.getAttribute("data-id");
+    var comments = $("#comment-" + id);
 
     // 获取一下二级评论的展开状态
-    const collapse = e.getAttribute("data-collapse");
+    var collapse = e.getAttribute("data-collapse");
     if (collapse) {
         // 折叠二级评论
         comments.removeClass("in");
@@ -62,7 +63,7 @@ function collapseComments(e) {
         e.classList.remove("active");
     } else {
         var subCommentContainer = $("#comment-" + id);
-        if (subCommentContainer.children().length !== 1) {
+        if (subCommentContainer.children().length != 1) {
             //展开二级评论
             comments.addClass("in");
             // 标记二级评论展开状态
@@ -108,6 +109,22 @@ function collapseComments(e) {
                 e.setAttribute("data-collapse", "in");
                 e.classList.add("active");
             });
+        }
+    }
+}
+
+function showSelectTag() {
+    $("#select-tag").show();
+}
+
+function selectTag(e) {
+    var value = e.getAttribute("data-tag");
+    var previous = $("#tag").val();
+    if (previous.indexOf(value) === -1) {
+        if (previous) {
+            $("#tag").val(previous + ',' + value);
+        } else {
+            $("#tag").val(value);
         }
     }
 }
