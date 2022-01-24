@@ -10,8 +10,9 @@ import org.springframework.web.servlet.ModelAndView;
  * @date 2022/1/22 19:17
  */
 @Data
-public class ResultDTO {
+public class ResultDTO<T> {
     
+    private T data;
     private Integer code;
     private String message;
 
@@ -33,6 +34,14 @@ public class ResultDTO {
         ResultDTO resultDTO = new ResultDTO();
         resultDTO.setCode(200);
         resultDTO.setMessage("请求成功");
+        return resultDTO;
+    }
+
+    public static <T> ResultDTO okOf(T t) {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(200);
+        resultDTO.setMessage("请求成功");
+        resultDTO.setData(t);
         return resultDTO;
     }
 }

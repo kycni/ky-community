@@ -2,6 +2,7 @@ package com.kycni.community.controller;
 
 import com.kycni.community.dto.CommentDTO;
 import com.kycni.community.dto.QuestionDTO;
+import com.kycni.community.enums.CommentTypeEnum;
 import com.kycni.community.exception.CustomizeErrorCode;
 import com.kycni.community.exception.CustomizeException;
 import com.kycni.community.mapper.UserMapper;
@@ -34,7 +35,7 @@ public class QuestionController {
         /*通过问题页，返回问题和用户信息，*/
         QuestionDTO questionDTO = questionService.getById(id);
         
-        List<CommentDTO> commentDTOList = commentService.listByQuestionId(id);
+        List<CommentDTO> commentDTOList = commentService.listByTargetId(id, CommentTypeEnum.QUESTION);
         
         /*浏览一次问题页，浏览数加1*/
         questionService.incView(id);
