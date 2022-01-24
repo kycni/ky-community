@@ -34,6 +34,8 @@ public class QuestionController {
         
         /*通过问题页，返回问题和用户信息，*/
         QuestionDTO questionDTO = questionService.getById(id);
+
+        List<QuestionDTO> relatedQuestions = questionService.selectRelated(questionDTO);
         
         List<CommentDTO> commentDTOList = commentService.listByTargetId(id, CommentTypeEnum.QUESTION);
         
@@ -42,6 +44,7 @@ public class QuestionController {
         /*将用户问题和用户信息返还给前端*/
         model.addAttribute("question", questionDTO);
         model.addAttribute("comments", commentDTOList);
+        model.addAttribute("relatedQuestions", relatedQuestions);
         return "question";
     }
     

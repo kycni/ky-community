@@ -15,6 +15,8 @@ public interface QuestionMapper extends Mapper<Question> {
     /**
      * 在数据库中创建问题表
      */
+    @Select("select * from QUESTION where id != #{id} and tag regexp #{tag}")
+    List<Question>selectRelated(Question question);
     
     @Update("UPDATE QUESTION SET VIEW_COUNT = VIEW_COUNT + #{viewCount} where id = #{id}")
     int incView(Question record);
