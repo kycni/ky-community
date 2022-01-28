@@ -37,4 +37,7 @@ public class Comment {
 
     @Column(name = "`LIKE_COUNT`")
     private Long likeCount;
+
+    @Column(name = "`COMMENT_COUNT`")
+    private Integer commentCount;
 }

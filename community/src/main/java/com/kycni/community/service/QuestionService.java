@@ -1,13 +1,15 @@
 package com.kycni.community.service;
 
+import com.kycni.community.dto.PaginationDTO;
+import com.kycni.community.dto.QuestionDTO;
 import com.kycni.community.exception.CustomizeErrorCode;
 import com.kycni.community.exception.CustomizeException;
 import com.kycni.community.mapper.QuestionMapper;
 import com.kycni.community.mapper.UserMapper;
-import com.kycni.community.dto.PaginationDTO;
-import com.kycni.community.dto.QuestionDTO;
 import com.kycni.community.model.Question;
 import com.kycni.community.model.User;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Kycni
@@ -67,10 +70,12 @@ public class QuestionService {
         }
 
         /*设置偏移量: size*(page-1): 跳过的数据行*/
-        Integer offset = size * (page - 1);
+        int offset = size * (page - 1);
         
         /*获取问题集合  显示逻辑数据显示的起始和结束,首页第一个数据对象,最后一个数组*/
-        List<Question> questionList = questionMapper.list(offset, size);
+        Example questionExample = new Example(Question.class);
+        questionExample.setOrderByClause("gmt_create desc");
+        List<Question> questionList = questionMapper.selectByExampleAndRowBounds(questionExample, new RowBounds(offset, size));
         
         /*获取主页列表（包含问题集和问题对应的用户信息）*/
         return getPaginationDTO(paginationDTO, questionList);
@@ -171,6 +176,7 @@ public class QuestionService {
             updateQuestion.setTitle(question.getTitle());
             updateQuestion.setDescription(question.getDescription());
             updateQuestion.setTag(question.getTag());
+
             questionMapper.update(question);
         }
     }
@@ -196,8 +202,8 @@ public class QuestionService {
      * @return {@link PaginationDTO}
      */
     private PaginationDTO getPaginationDTO(PaginationDTO paginationDTO, List<Question> questionList) {
+        
         List<QuestionDTO> questionDTOList = new ArrayList<>();
-
         for (Question question : questionList) {
             QuestionDTO questionDTO = new QuestionDTO();
             User user = userMapper.findById(question.getCreator());
@@ -208,6 +214,27 @@ public class QuestionService {
 
         paginationDTO.setQuestionDTOList(questionDTOList);
         return paginationDTO;
+    }
+    
+    public List<QuestionDTO> selectRelated(QuestionDTO queryDTO) {
+        
+        if (StringUtils.isBlank(queryDTO.getTag())) {
+            return new ArrayList<>();
+        }
+        
+        String[] tags = StringUtils.split(queryDTO.getTag(), ",");
+        String regexpTag = String.join("|", tags);
+        Question question = new Question();
+        question.setId(queryDTO.getId());
+        question.setTag(regexpTag);
+
+        List<Question> questions = questionMapper.selectRelated(question);
+        List<QuestionDTO> questionDTOList = questions.stream().map(q -> {
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(q, questionDTO);
+            return questionDTO;
+        }).collect(Collectors.toList());
+        return questionDTOList;
     }
 }
 

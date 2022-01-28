@@ -2,7 +2,6 @@ package com.kycni.community.mapper;
 
 import com.kycni.community.model.User;
 import org.apache.ibatis.annotations.*;
-import tk.mybatis.mapper.common.ExampleMapper;
 
 /**
  * @author Kycni
