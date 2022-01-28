@@ -22,7 +22,7 @@ public class UserService {
      */
     public void createOrUpdate(User user) {
         Example userExample = new Example(User.class);
-        userExample.createCriteria().andEqualTo("accoundId",user.getAccountId());
+        userExample.createCriteria().andEqualTo("accountId",user.getAccountId());
         List<User> users = userMapper.selectByExample(userExample);
         if (users.size() == 0) {
             // 插入

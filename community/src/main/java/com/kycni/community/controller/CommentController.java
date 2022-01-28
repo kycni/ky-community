@@ -1,6 +1,6 @@
 package com.kycni.community.controller;
 
-import com.kycni.community.dto.CommentCreatDTO;
+import com.kycni.community.dto.CommentCreateDTO;
 import com.kycni.community.dto.CommentDTO;
 import com.kycni.community.dto.ResultDTO;
 import com.kycni.community.enums.CommentTypeEnum;
@@ -26,7 +26,7 @@ public class CommentController {
     private CommentService commentService;
     
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
-    public Object post(@RequestBody CommentCreatDTO commentCreatDTO,
+    public Object post(@RequestBody CommentCreateDTO commentCreatDTO,
                        HttpServletRequest request) {
         
         User user = (User) request.getSession().getAttribute("user");
@@ -47,8 +47,8 @@ public class CommentController {
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setCommentator(user.getId());
         comment.setLikeCount(0L);
-        commentService.insert(comment);
-        
+        comment.setCommentCount(0);        
+        commentService.insert(comment, user);
         return ResultDTO.okOf();
         
     }

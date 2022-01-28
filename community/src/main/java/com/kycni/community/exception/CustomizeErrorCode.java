@@ -15,7 +15,10 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     COMMENT_NOT_FOUND(2006,"回复的评论不在了"),
     INVALID_OPERATION(2007,"非法操作"),
     INVALID_INPUT(2008,"非法输入"), 
-    CONTENT_IS_EMPTY(2009,"评论不能为空");
+    CONTENT_IS_EMPTY(2009,"评论不能为空"),
+    READ_NOTIFICATION_FAIL(2010,"你这是读别人的信息呢"),
+    NOTIFICATION_NOT_FIND(2011,"消息离家出走了");
+    
 
     @Override
     public String getMessage() {

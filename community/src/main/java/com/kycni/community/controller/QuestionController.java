@@ -30,7 +30,9 @@ public class QuestionController {
                            Model model) {
         /*通过问题页，返回问题和用户信息，*/
         QuestionDTO questionDTO = questionService.getById(questionId);
-        
+
+        List<QuestionDTO> selectRelated = questionService.selectRelated(questionDTO);
+
         List<CommentDTO> commentDTOList = commentService.listByTargetId(questionId, CommentTypeEnum.QUESTION);
         
         /*浏览一次问题页，浏览数加1*/

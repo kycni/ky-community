@@ -88,6 +88,18 @@ body {
     cursor: pointer;
 }
 
+.publish-tag-tab {
+    display: none;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.publish-tag-tab .label-info {
+    white-space: normal;
+    margin: 5px 5px;
+    display: inline-block;
+}
+
 .menu .comment-icon {
     font-size: 15px;
     cursor: pointer;

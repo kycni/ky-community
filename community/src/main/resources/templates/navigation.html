@@ -27,6 +27,7 @@
                 <li th:if="${session.user != null}">
                     <a href="/publish">提问</a>
                 </li>
+                <li><a href="/profile/replies">通知 <span class="badge" th:text="${session.unreadCount}"></span></a></li>s
                 
                 <li th:if="${session.user == null}">
                     <a th:href="@{http://localhost:7888/login/github}">登录</a>

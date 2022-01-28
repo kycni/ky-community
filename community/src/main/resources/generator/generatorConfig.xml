@@ -40,5 +40,8 @@
         <table tableName="comment">
             <generatedKey column="id" sqlStatement="JDBC"/>
         </table>
+        <table tableName="notification">
+            <generatedKey column="id" sqlStatement="JDBC"/>
+        </table>
     </context>
 </generatorConfiguration>
