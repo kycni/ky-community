@@ -13,4 +13,5 @@ public interface CommentMapper extends Mapper<Comment> {
 
     @Update("update COMMENT set COMMENT_COUNT = COMMENT_COUNT + #{commentCount} where id = #{id}")
     void incCommentCount(Comment parentComment);
+    
 }

@@ -18,7 +18,6 @@ public class ResultDTO<T> {
     private Integer code;
     private String message;
     
-    //定义返回显示异常信息的静态方法
     public static ResultDTO errorOf(Integer code, String message){
         ResultDTO resultDTO = new ResultDTO();
         resultDTO.setCode(code);

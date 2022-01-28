@@ -49,8 +49,14 @@ public class CommentService {
             if (dbComment == null) {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
-            commentMapper.insertSelective(comment);
-            
+            commentMapper.insert(comment);
+
+            // 增加评论数
+            Comment parentComment = new Comment();
+            parentComment.setId(comment.getParentId());
+            parentComment.setCommentCount(1);
+            commentMapper.incCommentCount(parentComment);
+
         } else {
             
             // 回复问题
@@ -65,10 +71,12 @@ public class CommentService {
         }
     }
 
-    public List<CommentDTO> list(Long questionId) {
+    public List<CommentDTO> listByTargetId(Long questionId, CommentTypeEnum type) {
         
         Example comment = new Example(Comment.class);
-        comment.createCriteria().andEqualTo("parentId",questionId);
+        comment.createCriteria().andEqualTo("parentId",questionId)
+                .andEqualTo("type", type.getType());
+        comment.setOrderByClause("gmt_create desc");
         
         /*获得questionComments，问题下的全部评论*/
         List<Comment> questioncomments = commentMapper.selectByExample(comment);

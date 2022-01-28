@@ -22,7 +22,7 @@ public interface QuestionMapper extends Mapper<Question> {
     int incView(Question record);
     
     @Update("UPDATE QUESTION SET COMMENT_COUNT = COMMENT_COUNT + #{commentCount} where id = #{id}")
-    void incCommentCount(Question question);
+    void incCommentCount(Question record);
     
     @Select("select count(1) from question")
     Integer count();
