@@ -1,56 +1,46 @@
 package com.kycni.community.controller;
 
-import com.kycni.community.dto.CommentDTO;
+import com.kycni.community.dto.CommentCreatDTO;
 import com.kycni.community.dto.ResultDTO;
 import com.kycni.community.exception.CustomizeErrorCode;
 import com.kycni.community.model.Comment;
 import com.kycni.community.model.User;
 import com.kycni.community.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 
 /**
  * @author Kycni
  * @date 2022/1/22 17:12
  */
-@Controller
+@RestController
 public class CommentController {
 
     @Autowired
     private CommentService commentService;
-
-    /**
-     * @RequestBody 自动反序列化JSON
-     */
-    @ResponseBody
+    
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
-    public Object post(@RequestBody CommentDTO commentDTO,
+    public Object post(@RequestBody CommentCreatDTO commentCreatDTO,
                        HttpServletRequest request) {
-
+        
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
             return ResultDTO.errorOf(CustomizeErrorCode.NO_LOGIN);
         }
         
+        /*创建并注入评论消息，*/
         Comment comment = new Comment();
-        comment.setParentId(commentDTO.getParentId());
-        /*content还要引入questionMapper去查，需要引用Service*/
-        comment.setContent(commentDTO.getContent());
-        comment.setType(commentDTO.getType());
+        comment.setParentId(commentCreatDTO.getParentId());
+        comment.setContent(commentCreatDTO.getContent());
+        comment.setType(commentCreatDTO.getType());
         comment.setGmtModified(System.currentTimeMillis());
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setCommentator(user.getId());
         comment.setLikeCount(0L);
         commentService.insert(comment);
         
-        /*@ResponseBody将对象序列化成JSON返回前端*/
         return ResultDTO.okOf();
         
     }

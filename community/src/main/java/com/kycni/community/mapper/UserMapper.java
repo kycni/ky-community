@@ -9,11 +9,8 @@ import tk.mybatis.mapper.common.ExampleMapper;
  * @date 2022/1/16 13:01
  */
 @Mapper
-public interface UserMapper {
-
-    @Insert("insert into user (name,account_id,token,gmt_create,gmt_modified,avatar_url,bio,source) values (#{name},#{accountId},#{token},#{gmtCreate},#{gmtModified},#{avatarUrl},#{bio},#{source})")
-    void insert(User user);
-
+public interface UserMapper extends tk.mybatis.mapper.common.Mapper<User> {
+    
     /**
      * 找到了令牌
      *

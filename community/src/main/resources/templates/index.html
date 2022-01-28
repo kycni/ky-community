@@ -6,10 +6,21 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/community.css">
-    <script src="../static/js/jquery-3.6.0.min.js"></script>
-    <script src="../static/js/bootstrap.min.js" type="application/javascript"></script>
-    
-</head> 
+    <script src="/js/jquery-3.6.0.min.js"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/js/community.js" type="application/javascript"></script>
+</head>
+
+<script type="application/javascript">
+    window.onload = function () {
+        let closable = window.localStorage.getItem("closable");
+        if (closable === "true") {
+            window.close();
+            window.localStorage.removeItem("closable")
+        }
+    }
+</script>
+
 <body>
 <!--主页导航栏-->
 <div th:insert="~{navigation :: nav}"></div>

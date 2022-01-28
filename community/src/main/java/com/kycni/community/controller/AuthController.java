@@ -70,6 +70,7 @@ public class AuthController {
             如果获取到了用户信息，则保存用户的登录信息
         */
         if (authResponse.getData().getNickname() != null) {
+            
             /*创建一个用户*/
             User user = new User();
             /*UUID，唯一不可变标识符，保存唯一token，后面用来与cookie绑定*/
@@ -119,9 +120,13 @@ public class AuthController {
     @GetMapping("/logout")
     public String logout(HttpServletRequest request,
                          HttpServletResponse response) {
+        /*移除的Session保存的登录状态*/
         request.getSession().removeAttribute("user");
+        /*将Cookie置空*/
         Cookie cookie = new Cookie("token", null);
+        /*将cookie寿命设为0*/
         cookie.setMaxAge(0);
+        /*返回Cookie*/
         response.addCookie(cookie);
         return "redirect:/";
     }
